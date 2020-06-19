@@ -4,6 +4,7 @@ package lesson2.task1
 
 import lesson1.task1.discriminant
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -63,7 +64,8 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String =
+    "$age " + if (age % 10 == 1 && age % 100 != 11) "год" else if (age % 10 in 2..4 && age % 100 !in 12..14) "года" else "лет"
 
 /**
  * Простая
@@ -91,7 +93,12 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int = TODO()
+): Int {
+    var result = 0
+    if ((rookX1 == kingX).xor(rookY1 == kingY)) result++
+    if ((rookX2 == kingX).xor(rookY2 == kingY)) result += 2
+    return result
+}
 
 /**
  * Простая
@@ -127,4 +134,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    val result = min(b.toDouble(), d.toDouble()) - max(a.toDouble(), c.toDouble())
+    return if (result >= 0) result.toInt() else -1
+}
