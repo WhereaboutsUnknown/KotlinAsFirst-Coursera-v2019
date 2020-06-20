@@ -2,6 +2,8 @@
 
 package lesson3.task1
 
+import kotlin.math.log10
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
@@ -196,7 +198,18 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var position = 0
+    var natural = 1
+    var square: Int
+    do {
+        square = natural * natural
+        val digitCount = (log10(square.toDouble()) + 1).toInt()
+        position += digitCount
+        natural++
+    } while (position < n)
+    return (square / (10.0.pow(position - n)).toInt()) % 10
+}
 
 /**
  * Сложная
