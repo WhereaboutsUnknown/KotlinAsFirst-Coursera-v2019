@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
@@ -212,7 +213,17 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var power = 0.0
+    var result = 0
+    digits.reversed().map(
+        fun(n: Int) {
+            result += (n * base.toDouble().pow(power)).toInt()
+            power++
+        }
+    )
+    return result
+}
 
 /**
  * Сложная
@@ -245,4 +256,38 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val ones = listOf(
+        "", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь",
+        "девять", "десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать",
+        "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"
+    )
+    val tens = listOf(
+        "", "", "двадцать ", "тридцать ", "сорок ", "пятьдесят ",
+        "шестьдесят ", "семьдесят ", "восемьдесят ", "девяносто "
+    )
+    val hundreds = listOf(
+        "", "сто ", "двести ", "триста ", "четыреста ", "пятьсот ", "шестьсот ", "семьсот ", "восемьсот ", "девятьсот "
+    )
+    val thousands = listOf(
+        "", "одна тысяча ", "две тысячи ", "три тысячи ", "четыре тысячи ", "пять тысяч ",
+        "шесть тысяч ", "семь тысяч ", "восемь тысяч ", "девять тысяч ", "десять тысяч ",
+        "одиннадцать тысяч ", "двенадцать тысяч ", "тринадцать тысяч ", "четырнадцать тысяч ",
+        "пятнадцать тысяч ", "шестнадцать тысяч ", "семнадцать тысяч ", "восемнадцать тысяч ",
+        "девятнадцать тысяч "
+    )
+    val digits: MutableList<Int> = mutableListOf()
+    var number = n
+    for (i in 0..5) {
+        digits += number % 10
+        number /= 10
+    }
+    if (digits[1] == 1) {
+        digits[0] += 10
+    }
+    if (digits[4] == 1) {
+        digits[3] += 10
+    }
+    val thousandsString = if (digits[3] == 0 && (digits[4] != 0 || digits[5] != 0)) "тысяч " else thousands[digits[3]]
+    return (hundreds[digits[5]] + tens[digits[4]] + thousandsString + hundreds[digits[2]] + tens[digits[1]] + ones[digits[0]]).trim()
+}
