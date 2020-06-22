@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import kotlin.math.max
+
 /**
  * Пример
  *
@@ -201,7 +203,20 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val collector: Map<String, Int> = list.map { it to 0 }.toMap()
+    val mutable: MutableMap<String, Int> = collector.toMutableMap()
+    for (key in list) {
+        mutable[key] = mutable[key]!!.plus(1)
+    }
+    val listToClean = list.toMutableList()
+    for (key in mutable.keys) {
+        if (mutable[key]!! <= 1) {
+            listToClean.remove(key)
+        }
+    }
+    return listToClean.map { it to mutable[it]!! }.toMap()
+}
 
 /**
  * Средняя
@@ -280,4 +295,41 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val bag: MutableSet<String> = mutableSetOf()
+    val number = treasures.size
+    val keyList: MutableList<String> = mutableListOf("null member")
+    for (key in treasures.keys) {
+        keyList.add(key)
+    }
+    val dynamicTable = Array(number + 1) { IntArray(capacity + 1) }
+    for (i in 0..capacity) {
+        dynamicTable[0][i] = 0
+    }
+    for (i in 0..number) {
+        dynamicTable[i][0] = 0
+    }
+    for (k in 1..number) {
+        for (s in 1..capacity) {
+            val weight = (treasures[keyList[k]] ?: error("")).first
+            val cost = (treasures[keyList[k]] ?: error("")).second
+            dynamicTable[k][s] =
+                if (s >= weight) max(dynamicTable[k - 1][s], dynamicTable[k - 1][s - weight] + cost)
+                else dynamicTable[k - 1][s]
+        }
+    }
+
+    fun combineItems(k: Int, s: Int) {
+        if (dynamicTable[k][s] != 0) {
+            if (dynamicTable[k][s] == dynamicTable[k - 1][s]) {
+                combineItems(k - 1, s)
+            } else {
+                combineItems(k - 1, s - (treasures[keyList[k]] ?: error("")).first)
+                bag.add(keyList[k])
+            }
+        }
+    }
+
+    combineItems(number, capacity)
+    return setOf(*bag.toTypedArray())
+}
