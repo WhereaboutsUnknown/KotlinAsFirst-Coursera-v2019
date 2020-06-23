@@ -2,6 +2,9 @@
 
 package lesson6.task1
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 /**
  * Пример
  *
@@ -55,6 +58,19 @@ fun main() {
     } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
+    println("Введите результаты прыжков в высоту одной строкой в формате: высота прыжка, пробел, попытки.")
+    println("% -неудачные попытки, --пропущенные попытки, +-успешные попытки.")
+    val newLine = readLine()
+    if (newLine != null) {
+        val result = bestHighJump(newLine)
+        if (result == -1) {
+            println("Введённая строка $newLine не соответствует формату")
+        } else {
+            println("Лучший результат: $result")
+        }
+    } else {
+        println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
+    }
 }
 
 
@@ -69,7 +85,19 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    try {
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        val parseFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+        val date = LocalDate.parse(str, parseFormatter)
+        if (str.contains("29 февраля") && !date.isLeapYear)
+            throw Exception()
+        return date.format(formatter)
+    } catch (e: Exception) {
+
+    }
+    return ""
+}
 
 /**
  * Средняя
@@ -122,7 +150,19 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    if (!jumps.matches(Regex("(\\d\\d\\d\\s[%+-]+\\s?)+")) || !jumps.contains("+")) {
+        return -1
+    }
+    val list: List<String> = jumps.split(" ")
+    var bestResult = 0
+    for (i in 1 until list.size step 2) {
+        if (list[i].contains("+") && list[i - 1].toInt() > bestResult) {
+            bestResult = list[i - 1].toInt()
+        }
+    }
+    return bestResult
+}
 
 /**
  * Сложная
