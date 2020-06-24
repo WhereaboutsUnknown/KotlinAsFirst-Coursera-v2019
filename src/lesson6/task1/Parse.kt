@@ -87,8 +87,8 @@ fun main() {
  */
 fun dateStrToDigit(str: String): String {
     try {
-        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-        val parseFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.y")
+        val parseFormatter = DateTimeFormatter.ofPattern("d MMMM y")
         val date = LocalDate.parse(str, parseFormatter)
         if (str.contains("29 февраля") && !date.isLeapYear)
             throw Exception()

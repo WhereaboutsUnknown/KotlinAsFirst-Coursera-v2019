@@ -214,6 +214,18 @@ Basic, Ruby, Swift.
         chooseLongestChaoticWord("input/chaotic_in1.txt", "temp.txt")
         assertFileContent("temp.txt", "Карминовый, Некрасивый")
         File("temp.txt").delete()
+
+        chooseLongestChaoticWord("input/chaotic_test1.txt", "temp.txt")
+        assertFileContent("temp.txt", "")
+        File("temp.txt").delete()
+
+        chooseLongestChaoticWord("input/chaotic_test2.txt", "temp.txt")
+        assertFileContent("temp.txt", "а")
+        File("temp.txt").delete()
+
+        chooseLongestChaoticWord("input/chaotic_test3.txt", "temp.txt")
+        assertFileContent("temp.txt", "а, Б, в, Г")
+        File("temp.txt").delete()
     }
 
 
